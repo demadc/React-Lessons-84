@@ -6,10 +6,37 @@ import { Layout } from './Layout';
 import { HiAcademicCap, HiChartPie } from 'react-icons/hi';
 import { IconButton } from './IconButton/IconButton';
 import { Component } from 'react';
+import { QuizForm } from './QuizForm/QuizForm';
 
 export class App extends Component {
   state = {
     quizData: initialQuizData,
+    filters: {
+      topic: '',
+      level: 'beginner',
+    },
+  };
+
+  changeTopicFilter = newTopic => {
+    this.setState(prevState => {
+      return {
+        filters: {
+          ...prevState.filters,
+          topic: newTopic,
+        },
+      };
+    });
+  };
+
+  changeLevelFilter = newLevel => {
+    this.setState(prevState => {
+      return {
+        filters: {
+          ...prevState.filters,
+          level: newLevel,
+        },
+      };
+    });
   };
 
   handleDelete = quizId => {
@@ -20,11 +47,43 @@ export class App extends Component {
     });
   };
 
+  addQuiz = newQuiz => {
+    this.setState(prevState => {
+      return {
+        quizData: [...prevState.quizData, newQuiz],
+      };
+    });
+  };
+
+  getVisibleQuizItems = () => {
+    const { quizData, filters } = this.state;
+
+    return quizData.filters(item => {
+      if (filters.level === 'all') {
+        return item.topic
+          .toLowerCase()
+          .includes(filters.topic.toLocaleLowerCase());
+      }
+      return (
+        item.topic.toLowerCase().includes(filters.topic.toLocaleLowerCase()) &&
+        item.level === filters.level
+      );
+    });
+  };
+
   render() {
+    const { filters } = this.state;
+    const visibleQuizItems = this.getVisibleQuizItems;
     return (
       <Layout>
-        <SearchBar />
-        <QuizList items={this.state.quizData} onDelete={this.handleDelete} />
+        <SearchBar
+          topicFilter={filters.topic}
+          levelFilter={filters.level}
+          onChangeTopic={this.changeTopicFilter}
+          onChangeLevel={this.changeLevelFilter}
+        />
+        <QuizForm onAdd={this.addQuiz} />
+        <QuizList items={visibleQuizItems} onDelete={this.handleDelete} />
         <IconButton variant="primary">
           <HiAcademicCap size={32} color="blue" />
         </IconButton>
