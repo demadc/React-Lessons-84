@@ -38,5 +38,5 @@ export class StateExample extends Component {
 //та addEventListener які у нас були на ванільному JS),слухач додається
 // як пропс на елемент(наприклад кнопка onClick={},
 // onMouseDown = {} onMouseMove = {})
-// метод render викликається кожного разу коли оновивс СТАН
+// метод render викликається кожного разу коли оновився СТАН
 //
