@@ -8,12 +8,14 @@ export const SearchBar = ({
   levelFilter,
   onChangeTopic,
   onChangeLevel,
+  onReset,
 }) => {
   return (
     <div>
       <Wrapper>
         <TopicFilter value={topicFilter} onChange={onChangeTopic} />
         <LevelFilter value={levelFilter} onChange={onChangeLevel} />
+        <button onClick={onReset}>Reset Filters</button>
       </Wrapper>
     </div>
   );
