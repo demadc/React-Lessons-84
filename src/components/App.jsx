@@ -16,6 +16,31 @@ export class App extends Component {
       level: 'all',
     },
   };
+  // методи ЖЦ використовуємо, коли нам треба зробити запити на БЕ
+  // та записуємо наш апдейт в STATE, а також для роботи та запису
+  // в Локал Сторадж;
+
+  componentDidMount() {
+    console.log('componentDidMount');
+    const savedFilters = localStorage.getItem('filters');
+    if (savedFilters !== null) {
+      this.setState({ filters: JSON.parse(savedFilters) });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('this.state:', this.state.filters);
+    console.log('prevState:', prevState.filters);
+    // console.log(this.state.filters === prevState.filters);
+    if (prevState.filters !== this.state.filters) {
+      localStorage.setItem('filters', JSON.stringify(this.state.filters));
+    }
+  }
+
+  componentWillUnmount() {
+    // метод для очищення за собою, щоб прибрати таймери,
+    // якісь слухачи подій, для того щоб уникнути витоку пам'яті
+  }
 
   changeTopicFilter = newTopic => {
     this.setState(prevState => {
