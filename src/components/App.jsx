@@ -1,5 +1,5 @@
 import { QuizList } from './QuizList/QuizList';
-import initialQuizData from '../data.json';
+// import initialQuizData from '../data.json';
 import { SearchBar } from './SearchBar/SearchBar';
 import { GlobalStyle } from './GlobalStyle';
 import { Layout } from './Layout';
@@ -10,7 +10,7 @@ import { QuizForm } from './QuizForm/QuizForm';
 
 export class App extends Component {
   state = {
-    quizData: initialQuizData,
+    quizData: [],
     filters: {
       topic: '',
       level: 'all',
