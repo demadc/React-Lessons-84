@@ -9,7 +9,7 @@ const customStyle = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50',
-    transform: 'translate(-50%, -50%)',
+    transform: 'translate(-50%, auto)',
   },
 };
 
@@ -31,8 +31,8 @@ export class QuizCard extends Component {
     } = this.props;
 
     return (
-      <Wrapper onClick={this.openModal}>
-        <Topic>{topic}</Topic>
+      <Wrapper>
+        <Topic onClick={this.openModal}>{topic}</Topic>
         <Text>
           <b>Level:{level}</b>
         </Text>
