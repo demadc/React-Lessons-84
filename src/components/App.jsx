@@ -7,6 +7,7 @@ import { Layout } from './Layout';
 // import { IconButton } from './IconButton/IconButton';
 import { Component } from 'react';
 import { QuizForm } from './QuizForm/QuizForm';
+import { deleteQuiz, fetchQuizzes, createQuiz } from 'api';
 
 export class App extends Component {
   state = {
@@ -15,22 +16,26 @@ export class App extends Component {
       topic: '',
       level: 'all',
     },
+    loading: false,
   };
   // методи ЖЦ використовуємо, коли нам треба зробити запити на БЕ
   // та записуємо наш апдейт в STATE, а також для роботи та запису
   // в Локал Сторадж;
 
-  componentDidMount() {
-    console.log('componentDidMount');
+  async componentDidMount() {
+    // console.log('componentDidMount');
     const savedFilters = localStorage.getItem('filters');
     if (savedFilters !== null) {
       this.setState({ filters: JSON.parse(savedFilters) });
     }
+    this.setState({ loading: true });
+    const quizData = await fetchQuizzes();
+    this.setState({ quizData: quizData, loading: false });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('this.state:', this.state.filters);
-    console.log('prevState:', prevState.filters);
+    // console.log('this.state:', this.state.filters);
+    // console.log('prevState:', prevState.filters);
     // console.log(this.state.filters === prevState.filters);
     if (prevState.filters !== this.state.filters) {
       localStorage.setItem('filters', JSON.stringify(this.state.filters));
@@ -64,18 +69,22 @@ export class App extends Component {
     });
   };
 
-  handleDelete = quizId => {
+  handleDelete = async quizId => {
+    const deletedQuiz = await deleteQuiz(quizId);
+
     this.setState(prevState => {
       return {
-        quizData: prevState.quizData.filter(item => item.id !== quizId),
+        quizData: prevState.quizData.filter(item => item.id !== deletedQuiz.id),
       };
     });
   };
 
-  addQuiz = newQuiz => {
+  addQuiz = async newQuiz => {
+    const createdQuiz = await createQuiz(newQuiz);
+    console.log(createdQuiz);
     this.setState(prevState => {
       return {
-        quizData: [...prevState.quizData, newQuiz],
+        quizData: [...prevState.quizData, createdQuiz],
       };
     });
   };
@@ -106,7 +115,7 @@ export class App extends Component {
   };
 
   render() {
-    const { filters } = this.state;
+    const { filters, loading } = this.state;
     const visibleQuizItems = this.getVisibleQuizItems();
     return (
       <Layout>
@@ -118,7 +127,12 @@ export class App extends Component {
           onReset={this.resetFilters}
         />
         <QuizForm onAdd={this.addQuiz} />
-        <QuizList items={visibleQuizItems} onDelete={this.handleDelete} />
+        {loading ? (
+          <div>LOADING...</div>
+        ) : (
+          <QuizList items={visibleQuizItems} onDelete={this.handleDelete} />
+        )}
+
         {/* <IconButton variant="primary">
           <HiAcademicCap size={32} color="blue" />
         </IconButton>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import { StyledForm, StyledField, StyledError } from './QuizForm.styled';
 import * as Yup from 'yup';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 
 const QuizSchema = Yup.object().shape({
   topic: Yup.string().min(1).required('Required'),
@@ -30,7 +30,7 @@ export const QuizForm = ({ onAdd }) => {
       }}
       validationSchema={QuizSchema}
       onSubmit={(values, actions) => {
-        onAdd({ ...values, id: nanoid() });
+        onAdd(values);
         actions.resetForm();
       }}
     >
